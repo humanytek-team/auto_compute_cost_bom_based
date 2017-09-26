@@ -12,7 +12,8 @@ class ProductTemplate(models.Model):
         for template in (self - unique_variants):
             template.standard_price = 0.0
         for template in self:
-            if template.product_variant_count == 1:
+            route_manuf = self.env['stock.location.route'].search(['|', ('name', '=', 'Manufacture'), ('name', '=', 'Fabricar')])
+            if template.product_variant_count == 1 and route_manuf in template.route_ids:
                 product = template.product_variant_id
                 bom = self.env['mrp.bom']._bom_find(product=product)
                 if bom:
